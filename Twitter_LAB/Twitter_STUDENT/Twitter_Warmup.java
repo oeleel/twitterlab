@@ -124,7 +124,14 @@ class TJTwitter2
     */
    public void splitIntoWords()
    {
-      //your code goes here      
+      String[] words;
+      for(int i = 0; i < statuses.size(); i++)  {
+         words = statuses.getText().split(" ");
+          
+         for (int j = 0; j < words.length; j++) {
+            terms.add(removePunctuation(words[i]));
+         }
+      }     
       
    }
 
@@ -138,8 +145,9 @@ class TJTwitter2
     */
    public String removePunctuation( String s )
    {
-      //your code goes here  
-      return "";    
+      String input = s; 
+      String lower = input.replaceAll("\\W","");  
+      return lower.toLowerCase();    
    }
 
    /** 
@@ -151,8 +159,21 @@ class TJTwitter2
    @SuppressWarnings("unchecked")
    public void removeCommonEnglishWords()
    {  
-      //your code goes here      
-      
+      try {
+         ArrayList<String> a = readFile("commonWords.txt");
+         for (int i = 0; i < terms.size();) {
+            if (a.contains(terms.get(i))) {
+               terms.remove(i);
+            }
+            else {
+               i++;
+            }
+         }
+
+      }     
+      catch(Exception e) {
+         e.printStackTrace();
+      }
    }
 
    /** 
@@ -163,8 +184,19 @@ class TJTwitter2
    @SuppressWarnings("unchecked")
    public void sortAndRemoveEmpties()
    {
-      //your code goes here      
+      String[] t = new String[terms.size()];
+      for(int i = 0; i < terms.size(); i++)
+      {
+         t[i] = terms.get(i);
+      }
       
+      Arrays.sort(t);
+      terms.clear();
+      for(String x : t)
+      {
+         if(x!= "")
+            terms.add(x);
+      }        
       
    }
    private static void sort(Comparable[] array)
