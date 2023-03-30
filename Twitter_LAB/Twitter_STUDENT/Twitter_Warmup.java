@@ -110,8 +110,7 @@ class TJTwitter2
     * Populates statuses.
     * @param String  the text file
     */
-   public void fetchTweets(String handle) throws IOException
-   {
+   public void fetchTweets(String handle) throws IOException {
       Scanner scan = new Scanner(new File(handle));
       while(scan.hasNext())
          statuses.add(new TJ_Status2(scan.nextLine()));
@@ -122,8 +121,7 @@ class TJTwitter2
     * This method takes each status and splits them into individual words.   
     * Store each word in terms.  
     */
-   public void splitIntoWords()
-   {
+   public void splitIntoWords() {
       String[] words;
       for(int i = 0; i < statuses.size(); i++)  {
          words = statuses.getText().split(" ");
@@ -157,8 +155,7 @@ class TJTwitter2
     * This method should NOT throw an excpetion.  Use try/catch.   
     */
    @SuppressWarnings("unchecked")
-   public void removeCommonEnglishWords()
-   {  
+   public void removeCommonEnglishWords() {  
       try {
          ArrayList<String> a = readFile("commonWords.txt");
          for (int i = 0; i < terms.size();) {
@@ -176,6 +173,33 @@ class TJTwitter2
       }
    }
 
+     public static ArrayList<String> readFile(String fileName)throws IOException {
+      int size = getFileSize(fileName);		
+      ArrayList<String> list = new ArrayList();		
+      Scanner input = new Scanner(new FileReader(fileName));
+      int i = 0;											
+      String line = "";	
+      while (input.hasNextLine()){
+         line = input.nextLine();					
+         line = line.toLowerCase();
+         list.add(line);								
+         i++;											     
+      }
+      input.close();	
+      return list;					
+   }
+
+   public static int getFileSize(String fileName) throws IOException {
+      Scanner input = new Scanner(new FileReader(fileName));
+      int size=0;
+      while (input.hasNextLine())				//while there is another line in the file
+      {
+         size++;										//add to the size
+         input.nextLine();							//go to the next line in the file
+      }
+      input.close();									//always close the files when you are done
+      return size;
+   }
    /** 
     * This method sorts the words in terms in alphabetically (and lexicographic) order.  
     * You should use your sorting code you wrote earlier this year.
@@ -194,16 +218,29 @@ class TJTwitter2
       terms.clear();
       for(String x : t)
       {
-         if(x!= "")
+         if(x != "")
             terms.add(x);
       }        
       
    }
-   private static void sort(Comparable[] array)
-   {
-   	//you will want additional helper methods
+   
+   private static void swap(Comparable[] array, int a, int b) {
+      Comparable temp = array[a];
+      array[a] = array[b];
+      array[b] = temp;
    }
-  
+
+  private static void sort(Comparable[] array) {
+      for(int i = 0; i < array.length - 1; i++) {
+         for(int j = i + 1; i < array.length; i++) {
+            if(array[j].compareTo(array[i]) < 0) {
+               swap(array, j, i);
+            }
+         }
+      }
+   }
+
+   
    /** 
     * This method calculates the word that appears the most times
     * Consider case - should it be case sensitive?  The choice is yours.
@@ -212,7 +249,31 @@ class TJTwitter2
    @SuppressWarnings("unchecked")
    public void mostPopularWord()
    {
-      //your code goes here  
+      String max = terms.get(0);
+      int amt = 0;
+      String realMax = "";
+      int realAmount = 0;
+      for(String i : terms)
+      {
+         if(max.equals(i))
+         {
+            amt++;
+         }
+         else
+         {
+            if(amt > realAmount)
+            {
+            realMax = max;
+            realAmount = amt;
+            }
+            amt = 1;
+            max = i;
+            
+         }
+      }
+      
+      popularWord = realMax;
+      frequencyMax = realAmount;   
    }
 }	  
 
