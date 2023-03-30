@@ -3,9 +3,12 @@
 //Driver program to test Parts I and II.
 import java.util.List;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Date;
+import java.util.List;
+import java.util.Arrays;
 
 public class Twitter_Warmup
 {
@@ -123,11 +126,11 @@ class TJTwitter2
     */
    public void splitIntoWords() {
       String[] words;
-      for(int i = 0; i < statuses.size(); i++)  {
-         words = statuses.getText().split(" ");
+      for(TJ_Status2 stat : statuses)  {
+         words = stat.getText().split(" ");
           
          for (int j = 0; j < words.length; j++) {
-            terms.add(removePunctuation(words[i]));
+            terms.add(removePunctuation(words[j]));
          }
       }     
       
