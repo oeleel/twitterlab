@@ -26,10 +26,10 @@ public class Twitter_Driver
    	// Uncomment this line to test, but then recomment so that the same
    	// tweet does not get sent out over and over.
    
-      /*
-      String message="Gooooooooo Colonials!";
+      
+      String message= "Gooooooooo Colonials!";
       bigBird.tweetOut(message);
-      */
+      
        
    
       // PART III - Test
@@ -103,7 +103,7 @@ class TJTwitter
    */
    public void tweetOut(String message) throws TwitterException, IOException
    {
-      
+      twitter.updateStatus(message);
    }
 
    
@@ -152,7 +152,14 @@ class TJTwitter
    public void splitIntoWords()
    {
    
-   
+   String[] words;
+      for(TJ_Status2 stat : statuses)  {
+         words = stat.getText().split(" ");
+          
+         for (int j = 0; j < words.length; j++) {
+            terms.add(removePunctuation(words[j]));
+         }
+      }     
    
    }
 
@@ -166,8 +173,9 @@ class TJTwitter
      */
    public String removePunctuation( String s )
    {
-      
-      return "";
+      String input = s; 
+      String lower = input.replaceAll("\\W","");  
+      return lower.toLowerCase();   
    	
    }
 
@@ -181,7 +189,21 @@ class TJTwitter
    public void removeCommonEnglishWords()
    {  
       
-   	
+   	try {
+         ArrayList<String> a = readFile("commonWords.txt");
+         for (int i = 0; i < terms.size();) {
+            if (a.contains(terms.get(i))) {
+               terms.remove(i);
+            }
+            else {
+               i++;
+            }
+         }
+
+      }     
+      catch(Exception e) {
+         e.printStackTrace();
+      }
    }
 
    /** 
@@ -193,7 +215,19 @@ class TJTwitter
    public void sortAndRemoveEmpties()
    {
       
-   	
+   	String[] t = new String[terms.size()];
+      for(int i = 0; i < terms.size(); i++)
+      {
+         t[i] = terms.get(i);
+      }
+      
+      Arrays.sort(t);
+      terms.clear();
+      for(String x : t)
+      {
+         if(x != "")
+            terms.add(x);
+      }        
    	
    }
    
@@ -206,7 +240,31 @@ class TJTwitter
    public void mostPopularWord()
    {
       
-   	
+   	String max = terms.get(0);
+      int amt = 0;
+      String realMax = "";
+      int realAmount = 0;
+      for(String i : terms)
+      {
+         if(max.equals(i))
+         {
+            amt++;
+         }
+         else
+         {
+            if(amt > realAmount)
+            {
+            realMax = max;
+            realAmount = amt;
+            }
+            amt = 1;
+            max = i;
+            
+         }
+      }
+      
+      popularWord = realMax;
+      frequencyMax = realAmount;   
    }
 
   /******************  Part IV *******************/
